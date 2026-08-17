@@ -3,6 +3,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { exec } = require('child_process');
 
 const raiz = path.join(__dirname, '..');
 const activos = JSON.parse(fs.readFileSync(path.join(raiz, 'activos.json'), 'utf8'));
@@ -83,9 +84,15 @@ async function main() {
 
   const plantilla = fs.readFileSync(path.join(raiz, 'plantilla.html'), 'utf8');
   const pagina = plantilla.replace('__DATOS_JSON__', JSON.stringify(datos));
-  fs.writeFileSync(path.join(raiz, 'index.html'), pagina, 'utf8');
+  const indexPath = path.join(raiz, 'index.html');
+  fs.writeFileSync(indexPath, pagina, 'utf8');
 
   console.log(`Actualizado: ${actualizado}`);
+
+  // Abre la pagina en el navegador que ya tengas abierto (agrega una pestana nueva)
+  exec(`start "" "${indexPath}"`, (err) => {
+    if (err) console.error('No se pudo abrir el navegador automaticamente:', err.message);
+  });
 }
 
 main().catch((err) => {
