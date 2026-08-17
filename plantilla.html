@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi cartera</title>
+<style>
+  :root {
+    --bg: #F4F2EC;
+    --surface: #FFFFFF;
+    --ink: #1B1F1E;
+    --ink-muted: #5E6560;
+    --ink-faint: #90978F;
+    --border: #DEDACD;
+    --accent: #0E7A72;
+    --accent-soft: #DCEEEA;
+    --amber: #B6791E;
+    --amber-soft: #F3E6CE;
+    --up-bg: #E1F0E4;
+    --up-fg: #1C7A45;
+    --down-bg: #FBE7E2;
+    --down-fg: #B03A22;
+    --pending-bg: #F1E9D8;
+    --pending-fg: #7A5A22;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12181A;
+      --surface: #1B2325;
+      --ink: #E9EDE8;
+      --ink-muted: #9BA79E;
+      --ink-faint: #6E7871;
+      --border: #2A3330;
+      --accent: #4FD1C5;
+      --accent-soft: #17322F;
+      --amber: #E3B15C;
+      --amber-soft: #35291A;
+      --up-bg: #1C332A;
+      --up-fg: #7FCBA0;
+      --down-bg: #34231F;
+      --down-fg: #E8917E;
+      --pending-bg: #2E2818;
+      --pending-fg: #D9B36C;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #12181A;
+    --surface: #1B2325;
+    --ink: #E9EDE8;
+    --ink-muted: #9BA79E;
+    --ink-faint: #6E7871;
+    --border: #2A3330;
+    --accent: #4FD1C5;
+    --accent-soft: #17322F;
+    --amber: #E3B15C;
+    --amber-soft: #35291A;
+    --up-bg: #1C332A;
+    --up-fg: #7FCBA0;
+    --down-bg: #34231F;
+    --down-fg: #E8917E;
+    --pending-bg: #2E2818;
+    --pending-fg: #D9B36C;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    padding: 2.5rem 1.25rem 4rem;
+  }
+  .page { max-width: 920px; margin: 0 auto; }
+
+  .masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.1rem;
+    margin-bottom: 1.75rem;
+    flex-wrap: wrap;
+  }
+  .masthead h1 {
+    font-family: ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    font-weight: 500;
+    font-size: 30px;
+    letter-spacing: -0.01em;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .masthead .updated {
+    font-family: ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace;
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    text-align: right;
+    line-height: 1.5;
+  }
+
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 2.25rem;
+  }
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .stat .label {
+    font-size: 11.5px;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .stat .value {
+    font-family: ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: 25px;
+    margin-top: 5px;
+  }
+  .stat.up .value { color: var(--up-fg); }
+  .stat.down .value { color: var(--down-fg); }
+
+  .group { margin-bottom: 2rem; }
+  .group h2 {
+    font-family: ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--ink);
+    margin: 0 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ledger { display: flex; flex-direction: column; }
+  .item { border-bottom: 1px solid var(--border); }
+  .item:last-child { border-bottom: none; }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 18px;
+    padding: 12px 6px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    border-radius: 8px;
+  }
+  .row:hover { background: var(--accent-soft); }
+  .row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+  .nombre-wrap { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+  .chev { font-size: 11px; color: var(--ink-faint); transition: transform .15s ease; flex-shrink: 0; }
+  .item.open .chev { transform: rotate(90deg); }
+  .row .nombre { font-size: 14.5px; font-weight: 500; }
+  .row .ticker {
+    font-family: ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace;
+    font-size: 12px;
+    color: var(--ink-faint);
+    letter-spacing: 0.02em;
+  }
+  .tendencia-caption {
+    font-size: 11.5px;
+    color: var(--ink-muted);
+    margin-top: 2px;
+  }
+  .tendencia-caption .alcista { color: var(--up-fg); }
+  .tendencia-caption .bajista { color: var(--down-fg); }
+  .tendencia-caption .lateral { color: var(--amber); }
+
+  .row .precio {
+    font-family: ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: 14.5px;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .row .precio .moneda { color: var(--ink-faint); font-size: 12px; margin-left: 4px; }
+  .pill {
+    font-family: ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: 12.5px;
+    font-weight: 500;
+    padding: 4px 9px;
+    border-radius: 999px;
+    text-align: center;
+    white-space: nowrap;
+    min-width: 64px;
+  }
+  .pill.up { background: var(--up-bg); color: var(--up-fg); }
+  .pill.down { background: var(--down-bg); color: var(--down-fg); }
+  .pill.pending {
+    background: var(--pending-bg);
+    color: var(--pending-fg);
+    grid-column: 2 / span 2;
+    text-align: left;
+    border-radius: 6px;
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  .panel {
+    display: none;
+    padding: 4px 6px 18px;
+  }
+  .item.open .panel { display: block; }
+  .panel-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    margin: 6px 0 12px;
+  }
+  .panel-meta b { color: var(--ink); font-family: ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace; }
+  .chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px 6px; }
+  .chart-wrap svg { display: block; width: 100%; height: auto; }
+  .chart-legend { display: flex; gap: 16px; font-size: 11.5px; color: var(--ink-muted); margin-top: 6px; }
+  .chart-legend span { display: inline-flex; align-items: center; gap: 5px; }
+  .swatch { width: 10px; height: 2px; display: inline-block; }
+  .disclaimer-mini {
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin-top: 10px;
+  }
+
+  footer {
+    margin-top: 2.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="masthead">
+    <h1>Mi cartera</h1>
+    <div class="updated" id="updated"></div>
+  </div>
+
+  <div class="summary" id="summary"></div>
+
+  <div id="grupos"></div>
+
+  <footer>
+    Precios de referencia de mercado, tomados de fuentes públicas. La comparación contra el promedio histórico es un cálculo estadístico sobre precios pasados, no una recomendación de inversión ni una predicción.
+  </footer>
+</div>
+
+<script type="application/json" id="datos">__DATOS_JSON__</script>
+<script>
+var datos = JSON.parse(document.getElementById('datos').textContent);
+var actualizado = datos.actualizado;
+var ruedasTendencia = datos.ruedasTendencia;
+var cotizaciones = datos.cotizaciones;
+
+document.getElementById('updated').textContent = 'Actualizado ' + actualizado;
+
+var subieron = cotizaciones.filter(function(c){ return c.variacion !== null && c.variacion > 0; }).length;
+var bajaron = cotizaciones.filter(function(c){ return c.variacion !== null && c.variacion < 0; }).length;
+var pendientes = cotizaciones.filter(function(c){ return c.precio === null; }).length;
+
+function stat(label, value, cls) {
+  return '<div class="stat' + (cls ? ' ' + cls : '') + '"><div class="label">' + label + '</div><div class="value">' + value + '</div></div>';
+}
+var summaryHtml = '';
+summaryHtml += stat('Activos seguidos', cotizaciones.length);
+summaryHtml += stat('Suben hoy', subieron, 'up');
+summaryHtml += stat('Bajan hoy', bajaron, 'down');
+if (pendientes) summaryHtml += stat('Pendientes', pendientes);
+document.getElementById('summary').innerHTML = summaryHtml;
+
+function svgChart(serie, sma) {
+  var w = 600, h = 150, padY = 10;
+  var min = Math.min.apply(null, serie);
+  var max = Math.max.apply(null, serie);
+  if (sma !== null) { min = Math.min(min, sma); max = Math.max(max, sma); }
+  var range = (max - min) || 1;
+  function x(i) { return (i / (serie.length - 1)) * w; }
+  function y(v) { return h - padY - ((v - min) / range) * (h - padY * 2); }
+
+  var pts = serie.map(function(v, i) { return x(i) + ',' + y(v).toFixed(1); }).join(' ');
+  var area = 'M' + x(0) + ',' + h + ' L' + pts.split(' ').join(' L') + ' L' + x(serie.length - 1) + ',' + h + ' Z';
+  var line = 'M' + pts.split(' ').join(' L');
+  var lastX = x(serie.length - 1), lastY = y(serie[serie.length - 1]);
+
+  var smaLine = '';
+  if (sma !== null) {
+    var sy = y(sma).toFixed(1);
+    smaLine = '<line x1="0" y1="' + sy + '" x2="' + w + '" y2="' + sy + '" stroke="var(--amber)" stroke-width="1.3" stroke-dasharray="5 4" />';
+  }
+
+  return '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none" role="img" aria-label="Historial de precio de las ultimas ' + serie.length + ' ruedas">' +
+    '<line x1="0" y1="' + (h - padY) + '" x2="' + w + '" y2="' + (h - padY) + '" stroke="var(--border)" stroke-width="1" />' +
+    '<line x1="0" y1="' + padY + '" x2="' + w + '" y2="' + padY + '" stroke="var(--border)" stroke-width="1" />' +
+    '<path d="' + area + '" fill="var(--accent-soft)" stroke="none" />' +
+    smaLine +
+    '<path d="' + line + '" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" />' +
+    '<circle cx="' + lastX + '" cy="' + lastY.toFixed(1) + '" r="3" fill="var(--accent)" />' +
+  '</svg>';
+}
+
+function panelContenido(c) {
+  if (!c.serie || !c.serie.length) {
+    return '<div class="panel-meta">Todavía no hay historial disponible para este activo.</div>';
+  }
+  var etiqueta = c.tendencia ? c.tendencia.charAt(0).toUpperCase() + c.tendencia.slice(1) : '—';
+  var signo = c.distanciaSma >= 0 ? '+' : '';
+  var html = '<div class="panel-meta">' +
+    '<span>Promedio últimas <b>' + c.ruedas + '</b> ruedas: <b>' + c.sma.toFixed(2) + ' ' + c.moneda + '</b></span>' +
+    '<span>Precio actual vs. promedio: <b class="' + c.tendencia + '">' + signo + c.distanciaSma.toFixed(2) + '%</b></span>' +
+    '<span>Estimación de tendencia: <b class="' + c.tendencia + '">' + etiqueta + '</b></span>' +
+  '</div>';
+  html += '<div class="chart-wrap">' + svgChart(c.serie, c.sma) +
+    '<div class="chart-legend">' +
+      '<span><i class="swatch" style="background:var(--accent)"></i>Precio de cierre</span>' +
+      '<span><i class="swatch" style="background:var(--amber)"></i>Promedio ' + ruedasTendencia + ' ruedas</span>' +
+    '</div>' +
+  '</div>';
+  html += '<div class="disclaimer-mini">Estimación estadística sobre precios pasados, no es una recomendación de compra o venta.</div>';
+  return html;
+}
+
+var tipos = [];
+cotizaciones.forEach(function(c){ if (tipos.indexOf(c.tipo) === -1) tipos.push(c.tipo); });
+
+var gruposHtml = '';
+tipos.forEach(function(tipo){
+  var items = cotizaciones.filter(function(c){ return c.tipo === tipo; });
+  gruposHtml += '<div class="group"><h2>' + tipo + '</h2><div class="ledger">';
+  items.forEach(function(c){
+    gruposHtml += '<div class="item" id="item-' + c.id + '">';
+    gruposHtml += '<button class="row" onclick="toggle(\'' + c.id + '\')" aria-expanded="false">';
+    gruposHtml += '<div class="nombre-wrap"><span class="chev">&#9656;</span><div><div class="nombre">' + c.nombre + '</div><div class="ticker">' + (c.ticker || 'sin ticker') + '</div>';
+    if (c.tendencia) {
+      var signo = c.distanciaSma >= 0 ? '+' : '';
+      gruposHtml += '<div class="tendencia-caption">' + ruedasTendencia + ' ruedas: <span class="' + c.tendencia + '">' + signo + c.distanciaSma.toFixed(1) + '% · ' + c.tendencia + '</span></div>';
+    }
+    gruposHtml += '</div></div>';
+    if (c.precio === null) {
+      gruposHtml += '<div class="pill pending">' + (c.nota || 'dato pendiente') + '</div>';
+    } else {
+      var cls = c.variacion >= 0 ? 'up' : 'down';
+      var signoDia = c.variacion >= 0 ? '+' : '';
+      gruposHtml += '<div class="precio">' + c.precio.toFixed(2) + '<span class="moneda">' + c.moneda + '</span></div>';
+      gruposHtml += '<div class="pill ' + cls + '">' + signoDia + c.variacion.toFixed(2) + '%</div>';
+    }
+    gruposHtml += '</button>';
+    gruposHtml += '<div class="panel">' + panelContenido(c) + '</div>';
+    gruposHtml += '</div>';
+  });
+  gruposHtml += '</div></div>';
+});
+document.getElementById('grupos').innerHTML = gruposHtml;
+
+function toggle(id) {
+  var item = document.getElementById('item-' + id);
+  var abierto = item.classList.toggle('open');
+  item.querySelector('.row').setAttribute('aria-expanded', abierto ? 'true' : 'false');
+}
+</script>
+</body>
+</html>

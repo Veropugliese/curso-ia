@@ -1,0 +1,12 @@
+[
+  { "id": "ypf", "tipo": "CEDEAR", "nombre": "YPF", "ticker": "YPF" },
+  { "id": "pampa_cedear", "tipo": "CEDEAR", "nombre": "Pampa Energía (CEDEAR)", "ticker": "PAM" },
+  { "id": "gld", "tipo": "CEDEAR", "nombre": "Oro (GLD)", "ticker": "GLD" },
+  { "id": "jnj", "tipo": "CEDEAR", "nombre": "Johnson & Johnson", "ticker": "JNJ" },
+  { "id": "ko", "tipo": "CEDEAR", "nombre": "Coca-Cola", "ticker": "KO" },
+  { "id": "lly", "tipo": "CEDEAR", "nombre": "Eli Lilly", "ticker": "LLY" },
+  { "id": "mcd", "tipo": "CEDEAR", "nombre": "McDonald's", "ticker": "MCD" },
+  { "id": "pg", "tipo": "CEDEAR", "nombre": "Procter & Gamble", "ticker": "PG" },
+  { "id": "pampa_accion", "tipo": "Acción", "nombre": "Pampa Energía", "ticker": "PAMP.BA" },
+  { "id": "bono_a028", "tipo": "Bono", "nombre": "Bono del Tesoro Nacional (A028)", "ticker": null, "nota": "ticker pendiente de verificar - no encontrado en Yahoo Finance, evaluar API de Rava a futuro" }
+]
