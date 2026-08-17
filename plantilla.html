@@ -6,60 +6,45 @@
 <title>Mi cartera</title>
 <style>
   :root {
-    --bg: #F4F2EC;
+    --bg: #F5F2EA;
     --surface: #FFFFFF;
-    --ink: #1B1F1E;
-    --ink-muted: #5E6560;
-    --ink-faint: #90978F;
-    --border: #DEDACD;
-    --accent: #0E7A72;
-    --accent-soft: #DCEEEA;
-    --amber: #B6791E;
-    --amber-soft: #F3E6CE;
-    --up-bg: #E1F0E4;
-    --up-fg: #1C7A45;
-    --down-bg: #FBE7E2;
-    --down-fg: #B03A22;
-    --pending-bg: #F1E9D8;
-    --pending-fg: #7A5A22;
+    --ink: #16130E;
+    --ink-muted: #5A544A;
+    --ink-faint: #8C8577;
+    --border: #DEDACB;
+    --accent: #E8590C;
+    --accent-soft: #FBE0CB;
+    --up: #0E7A41;
+    --down: #B91C34;
+    --pending: #8A5A08;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #12181A;
-      --surface: #1B2325;
-      --ink: #E9EDE8;
-      --ink-muted: #9BA79E;
-      --ink-faint: #6E7871;
-      --border: #2A3330;
-      --accent: #4FD1C5;
-      --accent-soft: #17322F;
-      --amber: #E3B15C;
-      --amber-soft: #35291A;
-      --up-bg: #1C332A;
-      --up-fg: #7FCBA0;
-      --down-bg: #34231F;
-      --down-fg: #E8917E;
-      --pending-bg: #2E2818;
-      --pending-fg: #D9B36C;
+      --bg: #15100B;
+      --surface: #221B14;
+      --ink: #F5EFE4;
+      --ink-muted: #B7AC9B;
+      --ink-faint: #7E7565;
+      --border: #392E22;
+      --accent: #FF7A33;
+      --accent-soft: #3E2313;
+      --up: #2FBE73;
+      --down: #FF5C68;
+      --pending: #E0A22E;
     }
   }
   :root[data-theme="dark"] {
-    --bg: #12181A;
-    --surface: #1B2325;
-    --ink: #E9EDE8;
-    --ink-muted: #9BA79E;
-    --ink-faint: #6E7871;
-    --border: #2A3330;
-    --accent: #4FD1C5;
-    --accent-soft: #17322F;
-    --amber: #E3B15C;
-    --amber-soft: #35291A;
-    --up-bg: #1C332A;
-    --up-fg: #7FCBA0;
-    --down-bg: #34231F;
-    --down-fg: #E8917E;
-    --pending-bg: #2E2818;
-    --pending-fg: #D9B36C;
+    --bg: #15100B;
+    --surface: #221B14;
+    --ink: #F5EFE4;
+    --ink-muted: #B7AC9B;
+    --ink-faint: #7E7565;
+    --border: #392E22;
+    --accent: #FF7A33;
+    --accent-soft: #3E2313;
+    --up: #2FBE73;
+    --down: #FF5C68;
+    --pending: #E0A22E;
   }
 
   * { box-sizing: border-box; }
@@ -82,16 +67,25 @@
     margin-bottom: 1.75rem;
     flex-wrap: wrap;
   }
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 4px;
+  }
   .masthead h1 {
-    font-family: ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-    font-weight: 500;
-    font-size: 30px;
-    letter-spacing: -0.01em;
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 800;
+    font-size: 36px;
+    letter-spacing: -0.02em;
     margin: 0;
     text-wrap: balance;
   }
   .masthead .updated {
     font-family: ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace;
+    font-weight: 600;
     font-size: 12.5px;
     color: var(--ink-muted);
     text-align: right;
@@ -119,21 +113,27 @@
   .stat .value {
     font-family: ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace;
     font-variant-numeric: tabular-nums;
-    font-size: 25px;
+    font-weight: 700;
+    font-size: 27px;
     margin-top: 5px;
   }
-  .stat.up .value { color: var(--up-fg); }
-  .stat.down .value { color: var(--down-fg); }
+  .stat.up .value { color: var(--up); }
+  .stat.down .value { color: var(--down); }
 
   .group { margin-bottom: 2rem; }
   .group h2 {
-    font-family: ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-    font-weight: 500;
-    font-size: 16px;
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
     color: var(--ink);
     margin: 0 0 10px;
+    padding-left: 11px;
     padding-bottom: 6px;
     border-bottom: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    line-height: 1.4;
   }
 
   .ledger { display: flex; flex-direction: column; }
@@ -161,46 +161,49 @@
   .nombre-wrap { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
   .chev { font-size: 11px; color: var(--ink-faint); transition: transform .15s ease; flex-shrink: 0; }
   .item.open .chev { transform: rotate(90deg); }
-  .row .nombre { font-size: 14.5px; font-weight: 500; }
+  .row .nombre { font-size: 15px; font-weight: 700; }
   .row .ticker {
     font-family: ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace;
+    font-weight: 600;
     font-size: 12px;
     color: var(--ink-faint);
     letter-spacing: 0.02em;
   }
   .tendencia-caption {
     font-size: 11.5px;
+    font-weight: 600;
     color: var(--ink-muted);
     margin-top: 2px;
   }
-  .tendencia-caption .alcista { color: var(--up-fg); }
-  .tendencia-caption .bajista { color: var(--down-fg); }
-  .tendencia-caption .lateral { color: var(--amber); }
+  .tendencia-caption .alcista { color: var(--up); }
+  .tendencia-caption .bajista { color: var(--down); }
+  .tendencia-caption .lateral { color: var(--pending); }
 
   .row .precio {
     font-family: ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace;
     font-variant-numeric: tabular-nums;
-    font-size: 14.5px;
+    font-weight: 700;
+    font-size: 15px;
     text-align: right;
     white-space: nowrap;
   }
-  .row .precio .moneda { color: var(--ink-faint); font-size: 12px; margin-left: 4px; }
+  .row .precio .moneda { color: var(--ink-faint); font-weight: 600; font-size: 12px; margin-left: 4px; }
   .pill {
     font-family: ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace;
     font-variant-numeric: tabular-nums;
     font-size: 12.5px;
-    font-weight: 500;
+    font-weight: 700;
     padding: 4px 9px;
     border-radius: 999px;
     text-align: center;
     white-space: nowrap;
     min-width: 64px;
   }
-  .pill.up { background: var(--up-bg); color: var(--up-fg); }
-  .pill.down { background: var(--down-bg); color: var(--down-fg); }
+  .pill.up { background: var(--up); color: #FFFFFF; }
+  .pill.down { background: var(--down); color: #FFFFFF; }
   .pill.pending {
-    background: var(--pending-bg);
-    color: var(--pending-fg);
+    background: var(--pending);
+    color: #FFFFFF;
     grid-column: 2 / span 2;
     text-align: left;
     border-radius: 6px;
@@ -221,7 +224,7 @@
     color: var(--ink-muted);
     margin: 6px 0 12px;
   }
-  .panel-meta b { color: var(--ink); font-family: ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace; }
+  .panel-meta b { color: var(--ink); font-weight: 700; font-family: ui-monospace, "Cascadia Mono", "SF Mono", Consolas, monospace; }
   .chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px 6px; }
   .chart-wrap svg { display: block; width: 100%; height: auto; }
   .chart-legend { display: flex; gap: 16px; font-size: 11.5px; color: var(--ink-muted); margin-top: 6px; }
@@ -246,7 +249,10 @@
 <body>
 <div class="page">
   <div class="masthead">
-    <h1>Mi cartera</h1>
+    <div>
+      <p class="eyebrow">Panel personal · en vivo</p>
+      <h1>Mi cartera</h1>
+    </div>
     <div class="updated" id="updated"></div>
   </div>
 
@@ -299,7 +305,7 @@ function svgChart(serie, sma) {
   var smaLine = '';
   if (sma !== null) {
     var sy = y(sma).toFixed(1);
-    smaLine = '<line x1="0" y1="' + sy + '" x2="' + w + '" y2="' + sy + '" stroke="var(--amber)" stroke-width="1.3" stroke-dasharray="5 4" />';
+    smaLine = '<line x1="0" y1="' + sy + '" x2="' + w + '" y2="' + sy + '" stroke="var(--pending)" stroke-width="1.6" stroke-dasharray="5 4" />';
   }
 
   return '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none" role="img" aria-label="Historial de precio de las ultimas ' + serie.length + ' ruedas">' +
@@ -326,7 +332,7 @@ function panelContenido(c) {
   html += '<div class="chart-wrap">' + svgChart(c.serie, c.sma) +
     '<div class="chart-legend">' +
       '<span><i class="swatch" style="background:var(--accent)"></i>Precio de cierre</span>' +
-      '<span><i class="swatch" style="background:var(--amber)"></i>Promedio ' + ruedasTendencia + ' ruedas</span>' +
+      '<span><i class="swatch" style="background:var(--pending)"></i>Promedio ' + ruedasTendencia + ' ruedas</span>' +
     '</div>' +
   '</div>';
   html += '<div class="disclaimer-mini">Estimación estadística sobre precios pasados, no es una recomendación de compra o venta.</div>';
